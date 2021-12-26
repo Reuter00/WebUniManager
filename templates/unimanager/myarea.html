@@ -3,27 +3,27 @@
 
 
 {% block content %}
-    <h3> My Area </h3>
-    <table class="table table-striped">
+    <h3> {{ info }}'s Area </h3>
 
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Classroom</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if students %}
-            {% for student in students %}
-                <tr>
-                    <td>{{ student.student.name }}</td>
-                    <td>{{ student.subject.name }}</td>
-                    <td>{{ student.classroom.number }}</td>
+    <div class = "myareasubjects">
+        <table class="table table-striped">
 
-                </tr>
-            {% endfor %}
-        {% endif %}
+            <thead>
+            <tr>
+                <th scope="col">Subject</th>
+                <th scope="col">Classroom</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if subjects %}
+                {% for subject in subjects %}
+                    <tr>
+                        <td>{{ subject.subject.name }}</td>
+                        <td>{{ subject.classroom.number }}</td>
 
-    </table>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
 {% endblock %}

@@ -1,12 +1,18 @@
-<!-- templates/registration/login.html -->
-<h2>Log In</h2>
+{% load static %}
+<!-- Bootstrap -->
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 
 
-   <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Log In</button>
-        </form>
+{% load crispy_forms_tags %}
+<div style=" display:flex; ">
+    <form method="POST" style=" margin:auto; margin-top: 10%">
+        <h2>Log In</h2>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
-
+</div>
 

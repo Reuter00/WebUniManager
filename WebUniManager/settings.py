@@ -20,12 +20,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Custom apps
     'unimanager',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +119,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # config/settings.py
-LOGIN_REDIRECT_URL = '/'
+
+# Login and logout Redirect paths
+LOGIN_REDIRECT_URL = '/myarea/'
+LOGOUT_REDIRECT_URL = 'login/'
 
 AUTH_USER_MODEL = 'unimanager.User'
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
