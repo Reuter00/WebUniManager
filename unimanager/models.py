@@ -7,6 +7,13 @@ class User(AbstractUser):
     is_teacher = models.BooleanField('teacher status', default=False)
 
 
+class SchoolYear(models.Model):
+    year = models.CharField(max_length=4)
+
+    def __str__(self):
+        return self.year
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=250)
 
@@ -37,9 +44,10 @@ class StudentSubject(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        return '{} {} {}'.format(self.student, self.subject, self.classroom)
+        return '{} {} {} {}'.format(self.student, self.subject, self.classroom, self.schoolyear)
 
 
 class Professor(models.Model):
@@ -58,9 +66,10 @@ class ProfessorSubject(models.Model):
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        return '{} {} {}'.format(self.professor, self.subject, self.classroom)
+        return '{} {} {} {}'.format(self.professor, self.subject, self.classroom, self.schoolyear)
 
 
 class SPRelation(models.Model):

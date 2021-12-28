@@ -122,7 +122,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login and logout Redirect paths
 LOGIN_REDIRECT_URL = '/myarea/'
-LOGOUT_REDIRECT_URL = 'login/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/login/'
 
 AUTH_USER_MODEL = 'unimanager.User'
 

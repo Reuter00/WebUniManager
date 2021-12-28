@@ -5,17 +5,18 @@
 {% block content %}
     <h3> {{ info }}'s Area </h3>
 
-    <div class = "myareasubjects">
-        <table class="table table-striped">
+    <div class="myareasubjects">
 
-            <thead>
-            <tr>
-                <th scope="col">Subject</th>
-                <th scope="col">Classroom</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% if subjects %}
+        {% if subjects %}
+            <table class="table table-striped">
+
+                <thead>
+                <tr>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Classroom</th>
+                </tr>
+                </thead>
+                <tbody>
                 {% for subject in subjects %}
                     <tr>
                         <td>{{ subject.subject.name }}</td>
@@ -23,7 +24,8 @@
 
                     </tr>
                 {% endfor %}
-            {% endif %}
-        </table>
-    </div>
+            </table>
+            </div>
+        {% endif %}
+
 {% endblock %}

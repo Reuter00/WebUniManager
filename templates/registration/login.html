@@ -11,6 +11,11 @@
         {% csrf_token %}
         {{ form|crispy }}
         <br>
+         {% if schoolyears %}
+                {% for schoolyear in schoolyears %}
+                   <a>{{ schoolyear.year }}</a>
+                {% endfor %}
+            {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
