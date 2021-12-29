@@ -12,14 +12,39 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                       {{ currentschoolyears.year }}
+                    </a>
+
+                    <!-- School years downbar -->
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                        {% for schoolyear in schoolyears %}
+                            <li>
+                                <form class="d-flex" action="{% url 'schoolyear' schoolyear.year %}">{% csrf_token %}
 
 
-                    <li class="nav-item active">
-                        <a class="btn btn-outline-success" href="{% url 'logout' %} ">Logout <span
-                                class="sr-only"></span></a>
-                    </li>
+                                    <button class="dropdown-item" name="schoolyear" value="{{ schoolyear.year }}" type="submit"
+                                            formmethod="post"> {{ schoolyear.year }}
+                                    </button>
+                                </form>
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </li>
+
+                <li class="nav-item active">
+                    <a class="btn btn-outline-success" href="{% url 'logout' %} ">Logout <span
+                            class="sr-only"></span></a>
+                </li>
 
             </ul>
 

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
@@ -40,6 +42,23 @@ class Student(models.Model):
         return self.name
 
 
+# Creates automaticly a user for loggin when creating a new Student
+@receiver(post_save, sender=Student)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        # User name is a combination of the first latter of the first name and the last name
+        name = instance.name
+        firstname = name.split()[0]
+        lastname = name.split()[1]
+        shoppedusername = firstname[0] + name.split()[1]
+        User.objects.create(username=shoppedusername.lower(), password=shoppedusername.lower(), first_name=firstname,
+                            last_name=lastname, is_staff=False, email=instance.email, is_active=True, is_student=True,
+                            is_teacher=False)
+
+
+post_save.connect(create_user_profile, sender=Student)
+
+
 class StudentSubject(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -60,6 +79,23 @@ class Professor(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Creates automaticly a user for loggin when creating a new Student
+@receiver(post_save, sender=Professor)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        # User name is a combination of the first latter of the first name and the last name
+        name = instance.name
+        firstname = name.split()[0]
+        lastname = name.split()[1]
+        shoppedusername = firstname[0] + name.split()[1]
+        User.objects.create(username=shoppedusername.lower(), password=shoppedusername.lower(), first_name=firstname,
+                            last_name=lastname, is_staff=False, email=instance.email, is_active=True, is_student=False,
+                            is_teacher=True)
+
+
+post_save.connect(create_user_profile, sender=Professor)
 
 
 class ProfessorSubject(models.Model):
