@@ -34,7 +34,7 @@ class Student(models.Model):
     name = models.CharField(max_length=250)
     email = models.EmailField(max_length=254)
     phone = models.IntegerField()
-    student_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    student_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     # student_profile_pic = models.ImageField(upload_to="classroom/student_profile_pic", blank=True)
 
@@ -51,12 +51,30 @@ def create_user_profile(sender, instance, created, **kwargs):
         firstname = name.split()[0]
         lastname = name.split()[1]
         shoppedusername = firstname[0] + name.split()[1]
-        User.objects.create(username=shoppedusername.lower(), password=shoppedusername.lower(), first_name=firstname,
-                            last_name=lastname, is_staff=False, email=instance.email, is_active=True, is_student=True,
-                            is_teacher=False)
+        newuser = User.objects.create(is_superuser=True, username=shoppedusername.lower(),
+                                      first_name=firstname,
+                                      last_name=lastname, is_staff=False, email=instance.email, is_active=True,
+                                      is_student=True,
+                                      is_teacher=False)
+        # uses User set_password for encrypting password
+        newuser.set_password(shoppedusername.lower())
+        newuser.save()
 
 
 post_save.connect(create_user_profile, sender=Student)
+
+
+# To make sure that the last Student created gets the last User id in student_user
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    lateststudent = Student.objects.latest('id')
+    if created and instance.first_name + ' ' + instance.last_name == lateststudent.name:
+        lateststuser = User.objects.latest('id')
+        lateststudent.student_user = lateststuser
+        lateststudent.save()
+
+
+post_save.connect(create_user_profile, sender=User)
 
 
 class StudentSubject(models.Model):
@@ -73,7 +91,7 @@ class Professor(models.Model):
     name = models.CharField(max_length=250)
     email = models.EmailField(max_length=250)
     phone = models.IntegerField()
-    teacher_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    teacher_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     # teacher_profile_pic = models.ImageField(upload_to="classroom/teacher_profile_pic", blank=True)
 
@@ -90,12 +108,30 @@ def create_user_profile(sender, instance, created, **kwargs):
         firstname = name.split()[0]
         lastname = name.split()[1]
         shoppedusername = firstname[0] + name.split()[1]
-        User.objects.create(username=shoppedusername.lower(), password=shoppedusername.lower(), first_name=firstname,
-                            last_name=lastname, is_staff=False, email=instance.email, is_active=True, is_student=False,
-                            is_teacher=True)
+        newuser = User.objects.create(is_superuser=True, username=shoppedusername.lower(),
+                                      first_name=firstname,
+                                      last_name=lastname, is_staff=False, email=instance.email, is_active=True,
+                                      is_student=False,
+                                      is_teacher=True)
+        # uses User set_password for encrypting password
+        newuser.set_password(shoppedusername.lower())
+        newuser.save()
 
 
 post_save.connect(create_user_profile, sender=Professor)
+
+
+# To make sure that the last Professor created gets the last User id in teacher_user
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        latestprofessor = Professor.objects.latest('id')
+        lateststuser = User.objects.latest('id')
+        latestprofessor.teacher_user = lateststuser
+        latestprofessor.save()
+
+
+post_save.connect(create_user_profile, sender=User)
 
 
 class ProfessorSubject(models.Model):
