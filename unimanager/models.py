@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
@@ -9,11 +11,35 @@ class User(AbstractUser):
     is_teacher = models.BooleanField('teacher status', default=False)
 
 
+class Semester(models.Model):
+    number = models.CharField(max_length=2)
+    start = models.DateField(default=datetime.now(), blank=True)
+    end = models.DateField(default=datetime.now(), blank=True)
+
+    def __str__(self):
+        return self.number
+
+
 class SchoolYear(models.Model):
     year = models.CharField(max_length=4)
 
     def __str__(self):
         return self.year
+
+
+class CoursesType(models.Model):
+    name = models.CharField(max_length=25)
+
+    def __str__(self):
+        return self.name
+
+
+class Courses(models.Model):
+    name = models.CharField(max_length=25)
+    type = models.ForeignKey(CoursesType, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return '{} | {}'.format(self.type, self.name)
 
 
 class Subject(models.Model):
@@ -34,6 +60,7 @@ class Student(models.Model):
     name = models.CharField(max_length=250)
     email = models.EmailField(max_length=254)
     phone = models.IntegerField()
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE, blank=True, null=True)
     student_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     # student_profile_pic = models.ImageField(upload_to="classroom/student_profile_pic", blank=True)
@@ -81,10 +108,11 @@ class StudentSubject(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1)
+    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1, blank=True, null=True)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, default=1, blank=True, null=True)
 
     def __str__(self):
-        return '{} {} {} {}'.format(self.student, self.subject, self.classroom, self.schoolyear)
+        return '{} {} {} {} {}'.format(self.student, self.subject, self.classroom, self.schoolyear, self.semester)
 
 
 class Professor(models.Model):
@@ -138,10 +166,11 @@ class ProfessorSubject(models.Model):
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1)
+    schoolyear = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, default=1, blank=True, null=True)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, default=1, blank=True, null=True)
 
     def __str__(self):
-        return '{} {} {} {}'.format(self.professor, self.subject, self.classroom, self.schoolyear)
+        return '{} {} {} {} {}'.format(self.professor, self.subject, self.classroom, self.schoolyear, self.semester)
 
 
 class SPRelation(models.Model):

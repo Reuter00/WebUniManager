@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from unimanager.models import *
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 import datetime
@@ -15,11 +15,13 @@ def currentyear():
 
 
 def myarea(request, selected_schoolyear=currentyear()):
-    userid = None
+
+    # Variable for School year and semester
     schoolyears = SchoolYear.objects.all().order_by('-year')
     selected_schoolyear_info = SchoolYear.objects.get(year=selected_schoolyear)
+    semesters = Semester.objects.all()
 
-    # check if loged in user is a student or a professor
+    # Check if loged in user is a student or a professor
     if request.user.is_authenticated:
         userid = request.user.id
         isstudentorprofessor = request.user.is_student
@@ -32,6 +34,8 @@ def myarea(request, selected_schoolyear=currentyear()):
                 'subjects': studentsubjects,
                 'currentschoolyears': selected_schoolyear_info,
                 'schoolyears': schoolyears,
+                'semesters': semesters,
+
             }
 
         else:
@@ -43,6 +47,7 @@ def myarea(request, selected_schoolyear=currentyear()):
                 'subjects': professorsubjects,
                 'currentschoolyears': selected_schoolyear_info,
                 'schoolyears': schoolyears,
+                'semesters': semesters,
             }
 
     else:  # Redirect to login if not logged in
