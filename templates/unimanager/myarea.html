@@ -15,39 +15,81 @@
                     <h6 class="m-0 font-weight-bold text-primary">Semester {{ semester.number }}</h6>
                 </div>
 
-                        {% if subjects %}
+                {% if studentmarks is not null %}
 
 
-                                  <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                    <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
 
-                                    <thead>
+                        <thead>
+                        <tr>
+                            <th scope="col">Subject</th>
+                            <th scope="col">Classroom</th>
+                            <th scope="col">Mark</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for studentmark in studentmarks %}
+                            {% if studentmark.student.schoolyear.year == currentschoolyears.year %}
+                                {% if studentmark.student.semester.number == semester.number %}
                                     <tr>
-                                        <th scope="col">Subject</th>
-                                        <th scope="col">Classroom</th>
+                                        <td>{{ studentmark.student.subject.name }}</td>
+                                        <td>{{ studentmark.student.classroom.number }}</td>
+                                        <td>{{ studentmark.mark }}</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for subject in subjects %}
-                                        {% if subject.semester.number == semester.number %}
-                                            <tr>
-                                                <td>{{ subject.subject.name }}</td>
-                                                <td>{{ subject.classroom.number }}</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
 
-                                            </tr>
-                                        {% endif %}
-                                    {% endfor %}
+                    </table>
 
-                                </table>
+                {% else %}
+                    <h3> There is no data! </h3>
 
-                        {% else %}
-                            <h3> There is no data! </h3>
+                    </div>
+                {% endif %}
 
-                            </div>
-                        {% endif %}
-                </div>
-            </div>
+
         {% endfor %}
-    </div>
 
 
+
+    {% for semester in semesters %}
+        <div >
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Semester {{ semester.number }}</h6>
+            </div>
+
+            {% if subjects %}
+
+
+                <table class="table table-bordered"  width="50%" cellspacing="0">
+
+                    <thead>
+                    <tr>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Classroom</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for subject in subjects %}
+                        {% if subject.semester.number == semester.number %}
+                            <tr>
+                                <td>{{ subject.subject.name }}</td>
+                                <td>{{ subject.classroom.number }}</td>
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+
+                </table>
+
+            {% else %}
+                <h3> There is no data! </h3>
+
+                </div>
+            {% endif %}
+
+    {% endfor %}
+
+   </div>
 {% endblock %}

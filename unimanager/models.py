@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
@@ -13,8 +14,8 @@ class User(AbstractUser):
 
 class Semester(models.Model):
     number = models.CharField(max_length=2)
-    start = models.DateField(default=datetime.now(), blank=True)
-    end = models.DateField(default=datetime.now(), blank=True)
+    start = models.DateField(blank=True)
+    end = models.DateField(blank=True)
 
     def __str__(self):
         return self.number
@@ -174,10 +175,9 @@ class ProfessorSubject(models.Model):
 
 
 class SPRelation(models.Model):
-    professor = models.ForeignKey(Professor, related_name='professors', on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, related_name='students', on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, related_name='subjects', on_delete=models.CASCADE)
-    mark = models.IntegerField(null=True)
+    professor = models.ForeignKey(ProfessorSubject, related_name='professors', on_delete=models.CASCADE)
+    student = models.ForeignKey(StudentSubject, related_name='students', on_delete=models.CASCADE)
+    mark = models.IntegerField(validators=[MaxValueValidator(20)], null=True)
 
     def __str__(self):
-        return self.professor, self.student, self.subject, self.mark
+        return '{} | {} | {} '.format(self.professor, self.student, self.mark)

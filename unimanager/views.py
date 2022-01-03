@@ -15,7 +15,7 @@ def currentyear():
 
 
 def myarea(request, selected_schoolyear=currentyear()):
-
+    userid = None
     # Variable for School year and semester
     schoolyears = SchoolYear.objects.all().order_by('-year')
     selected_schoolyear_info = SchoolYear.objects.get(year=selected_schoolyear)
@@ -29,12 +29,15 @@ def myarea(request, selected_schoolyear=currentyear()):
         if isstudentorprofessor:
             studentinfo = Student.objects.get(student_user_id=userid)
             studentsubjects = StudentSubject.objects.filter(student=studentinfo, schoolyear=selected_schoolyear_info.id)
+            studentmarks = SPRelation.objects.all()
             context = {
                 'info': studentinfo,
                 'subjects': studentsubjects,
                 'currentschoolyears': selected_schoolyear_info,
                 'schoolyears': schoolyears,
                 'semesters': semesters,
+                'studentmarks': studentmarks,
+
 
             }
 
