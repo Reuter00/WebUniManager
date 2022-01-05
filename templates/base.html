@@ -13,8 +13,14 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-
+   <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin' %}">Admin</a>
+          </li>
+        </ul>
     </div>
+
+
   <!-- School years downbar -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent" >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -23,6 +29,7 @@
                    data-bs-toggle="dropdown" aria-expanded="false">
                     {{ currentschoolyears.year }}
                 </a>
+
 
                 <!-- School years downbar -->
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >

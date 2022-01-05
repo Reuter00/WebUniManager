@@ -9,60 +9,69 @@
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800"> {{ info }}'s Area </h1>
 
+
         {% for semester in semesters %}
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Semester {{ semester.number }}</h6>
                 </div>
+                <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
 
-                {% if studentmarks is not null %}
+                    <thead>
+                    <tr>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Professor</th>
+                        <th scope="col">Classroom</th>
+                        <th scope="col">Mark</th>
+                    </tr>
+                    </thead>
 
 
-                    <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                    <tbody>
 
-                        <thead>
-                        <tr>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Classroom</th>
-                            <th scope="col">Mark</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <tr>
                         {% for studentmark in studentmarks %}
                             {% if studentmark.student.schoolyear.year == currentschoolyears.year %}
                                 {% if studentmark.student.semester.number == semester.number %}
-                                    <tr>
+                                    {% if studentmark %}
                                         <td>{{ studentmark.student.subject.name }}</td>
+                                        <td>{{ studentmark.professor.professor.name }}</td>
                                         <td>{{ studentmark.student.classroom.number }}</td>
-                                        <td>{{ studentmark.mark }}</td>
-                                    </tr>
+                                        {% if studentmark.mark >= 9.5 %}
+                                            <td style="background-color: forestgreen;">{{ studentmark.mark }}</td>
+                                        {% else %}
+                                            <td style="background-color: indianred;">{{ studentmark.mark }}</td>
+                                        {% endif %}
+                                        </tr>
+
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
+
                         {% endfor %}
 
-                    </table>
+                </table>
 
-                {% else %}
-                    <h3> There is no data! </h3>
 
-                    </div>
-                {% endif %}
+            </div>
 
 
         {% endfor %}
 
+    </div>
 
-
-    {% for semester in semesters %}
-        <div >
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Semester {{ semester.number }}</h6>
-            </div>
-
+    <div style="width: 25%; padding-left: 10px ">
+        <h1 class="h3 mb-2 text-gray-800"> All your subjects </h1>
+        {% for semester in semesters %}
             {% if subjects %}
+                <div>
+                    <h6 class="m-0 font-weight-bold text-primary">Semester {{ semester.number }}</h6>
+                </div>
 
 
-                <table class="table table-bordered"  width="50%" cellspacing="0">
+
+
+                <table class=" table table-bordered" width="50%" cellspacing="0">
 
                     <thead>
                     <tr>
@@ -83,13 +92,12 @@
 
                 </table>
 
-            {% else %}
-                <h3> There is no data! </h3>
 
-                </div>
+
+
             {% endif %}
 
-    {% endfor %}
+        {% endfor %}
 
-   </div>
+
 {% endblock %}

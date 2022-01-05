@@ -177,7 +177,7 @@ class ProfessorSubject(models.Model):
 class SPRelation(models.Model):
     professor = models.ForeignKey(ProfessorSubject, related_name='professors', on_delete=models.CASCADE)
     student = models.ForeignKey(StudentSubject, related_name='students', on_delete=models.CASCADE)
-    mark = models.IntegerField(validators=[MaxValueValidator(20)], null=True)
+    mark = models.FloatField(validators=[MaxValueValidator(20)], null=True)
 
     def __str__(self):
         return '{} | {} | {} '.format(self.professor, self.student, self.mark)

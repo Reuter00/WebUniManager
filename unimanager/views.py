@@ -29,7 +29,8 @@ def myarea(request, selected_schoolyear=currentyear()):
         if isstudentorprofessor:
             studentinfo = Student.objects.get(student_user_id=userid)
             studentsubjects = StudentSubject.objects.filter(student=studentinfo, schoolyear=selected_schoolyear_info.id)
-            studentmarks = SPRelation.objects.all()
+            studentmarks = SPRelation.objects.filter(student_id__in=studentsubjects.all())
+
             context = {
                 'info': studentinfo,
                 'subjects': studentsubjects,
@@ -37,6 +38,7 @@ def myarea(request, selected_schoolyear=currentyear()):
                 'schoolyears': schoolyears,
                 'semesters': semesters,
                 'studentmarks': studentmarks,
+
 
 
             }
@@ -62,3 +64,8 @@ def myarea(request, selected_schoolyear=currentyear()):
 # Logout View
 def logout_view(request):
     logout(request)
+
+
+# Logout View
+def adminpage(request):
+    return HttpResponseRedirect('/admin/')
