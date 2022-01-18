@@ -21,42 +21,40 @@ def myarea(request, selected_schoolyear=currentyear()):
     selected_schoolyear_info = SchoolYear.objects.get(year=selected_schoolyear)
     semesters = Semester.objects.all()
 
-    # Check if loged in user is a student or a professor
-    if request.user.is_authenticated:
-        userid = request.user.id
-        isstudentorprofessor = request.user.is_student
-
-        if isstudentorprofessor:
-            studentinfo = Student.objects.get(student_user_id=userid)
-            studentsubjects = StudentSubject.objects.filter(student=studentinfo, schoolyear=selected_schoolyear_info.id)
-            studentmarks = SPRelation.objects.filter(student_id__in=studentsubjects.all())
-
-            context = {
-                'info': studentinfo,
-                'subjects': studentsubjects,
-                'currentschoolyears': selected_schoolyear_info,
-                'schoolyears': schoolyears,
-                'semesters': semesters,
-                'studentmarks': studentmarks,
-
-
-
-            }
-
-        else:
-            professorinfo = Professor.objects.get(teacher_user_id=userid)
-            professorsubjects = ProfessorSubject.objects.filter(professor=professorinfo,
-                                                                schoolyear=selected_schoolyear_info.id)
-            context = {
-                'info': professorinfo,
-                'subjects': professorsubjects,
-                'currentschoolyears': selected_schoolyear_info,
-                'schoolyears': schoolyears,
-                'semesters': semesters,
-            }
-
-    else:  # Redirect to login if not logged in
+    if not request.user.is_authenticated:
         return HttpResponseRedirect('/login/')
+
+    userid = request.user.id
+    isstudentorprofessor = request.user.is_student
+
+    if isstudentorprofessor:
+        studentinfo = Student.objects.get(student_user_id=userid)
+        studentsubjects = StudentSubject.objects.filter(student=studentinfo, schoolyear=selected_schoolyear_info.id)
+        studentmarks = SPRelation.objects.filter(student_id__in=studentsubjects.all())
+
+        context = {
+            'info': studentinfo,
+            'subjects': studentsubjects,
+            'currentschoolyears': selected_schoolyear_info,
+            'schoolyears': schoolyears,
+            'semesters': semesters,
+            'studentmarks': studentmarks,
+
+
+
+        }
+
+    else:
+        professorinfo = Professor.objects.get(teacher_user_id=userid)
+        professorsubjects = ProfessorSubject.objects.filter(professor=professorinfo,
+                                                            schoolyear=selected_schoolyear_info.id)
+        context = {
+            'info': professorinfo,
+            'subjects': professorsubjects,
+            'currentschoolyears': selected_schoolyear_info,
+            'schoolyears': schoolyears,
+            'semesters': semesters,
+        }
 
     return render(request, 'unimanager/myarea.html', context)
 
